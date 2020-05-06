@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'chart.dart';
 import 'new_transaction.dart';
 import 'transaction_list.dart';
 import 'transaction.dart';
@@ -12,7 +13,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter App',
+      title: 'Personal Expenses',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        accentColor: Colors.teal,
+        fontFamily: 'OpenSans'
+      ),
       home: MyHomePage(),
     );
   }
@@ -28,7 +34,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> userTransactions = [
 
-    Transaction(
+   /* Transaction(
       id: 't1',
       title: 'New Shoes',
       amount: 69.99,
@@ -39,8 +45,15 @@ class _MyHomePageState extends State<MyHomePage> {
       title: 'Weekly Groceries',
       amount: 16.53,
       date: DateTime.now(),
-    )
+    )*/
   ];
+List<Transaction> get recentTransactions{
+
+  return userTransactions.where((tx) {
+    return tx.date.isAfter(DateTime.now().subtract(Duration(days: 7)));
+  }).toList();
+
+}
 
   void addNewTransaction(String txtitle, double txamount) {
     final newTx = Transaction(
@@ -71,7 +84,12 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
 
       appBar: AppBar(
-        title: Text('Flutter App'),
+        title: Text('Personal Expenses',
+        style: TextStyle(
+            fontFamily: 'PlayfairDisplay',
+          fontWeight: FontWeight.w500
+        ),
+        ),
         actions: <Widget>[IconButton(icon: Icon(Icons.add), onPressed:() => startAddNewTransaction(context))],
       ),
       body: SingleChildScrollView(
@@ -79,14 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              color: Colors.blue,
-              width: double.infinity,
-              child: Card(
-                child: Text('CHART'),
-                elevation: 5,
-              ),
-            ),
+            Chart(recentTransactions),
           TransactionList(userTransactions),
         ],
         ),
