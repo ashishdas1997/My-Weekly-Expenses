@@ -55,11 +55,11 @@ List<Transaction> get recentTransactions{
 
 }
 
-  void addNewTransaction(String txtitle, double txamount) {
+  void addNewTransaction(String txtitle, double txamount, DateTime chosenDate) {
     final newTx = Transaction(
       title: txtitle,
       amount: txamount,
-      date: DateTime.now(),
+      date: chosenDate,
       id: DateTime.now().toString(),
     );
 
@@ -77,6 +77,15 @@ List<Transaction> get recentTransactions{
       behavior: HitTestBehavior.opaque,
       );
     });
+  }
+
+  void deleteTransaction(String id){
+  setState(() {
+    userTransactions.removeWhere((tx)  {
+      return tx.id==id;
+    });
+  });
+
   }
 
   @override
@@ -98,7 +107,7 @@ List<Transaction> get recentTransactions{
           //crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Chart(recentTransactions),
-          TransactionList(userTransactions),
+          TransactionList(userTransactions, deleteTransaction),
         ],
         ),
       ),
